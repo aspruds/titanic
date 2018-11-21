@@ -1,0 +1,7 @@
+tensorflow
+numpy
+pandas
+sklearn
+keras
+tflearn
+cloudpickle==0.5.6

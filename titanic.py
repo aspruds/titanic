@@ -16,8 +16,19 @@ def load():
     # Make a df out of it for convenience
     df = pd.DataFrame(data, columns=["pclass", "name", "sex", "age", "sibsp", "parch", "ticket", "fare"])
     pd.set_option('display.max_columns', 10)
-    df = df.drop(columns=['name', 'ticket', 'fare', 'parch'])
+    df = df.drop(columns=['name', 'ticket', 'parch'])
+
+    # normalize age
+    df['age'] = df['age'].astype('float64')
+    df["age"] = df["age"] / df["age"].max()
+
+    # normalize fare
+    df['fare'] = df['fare'].astype('float64')
+    df["fare"] = df["fare"] / df["fare"].max()
+
+    # convert sex
     df = df.replace(["male", "female"], [0, 1])
+
     print(df.head())
     print(df.describe())
     return df, labels
@@ -34,7 +45,6 @@ def split():
 
     print('Total number of rows: %d' % df.shape[0])
     print('Total number of rows in X_train: %d' % X_train.shape[0])
-    print('Total number of rows in y_test: %d' % y_test.shape[0])
     print('Total number of rows in X_test: %d' % X_test.shape[0])
     return X_train, X_test, y_train, y_test
 
@@ -43,19 +53,19 @@ def train():
     model = tf.keras.models.Sequential()
 
     # input layer
-    model.add(tf.keras.layers.Dense(4, input_shape=(4,)))
-    model.add(tf.keras.layers.BatchNormalization())
-    model.add(tf.keras.layers.Activation("relu"))
-    model.add(tf.keras.layers.Dropout(0.4))
-
-    # hidden layers
-    model.add(tf.keras.layers.Dense(10))
+    model.add(tf.keras.layers.Dense(5, input_shape=(5,)))
     model.add(tf.keras.layers.BatchNormalization())
     model.add(tf.keras.layers.Activation("relu"))
     model.add(tf.keras.layers.Dropout(0.3))
 
     # hidden layers
-    model.add(tf.keras.layers.Dense(5))
+    model.add(tf.keras.layers.Dense(12))
+    model.add(tf.keras.layers.BatchNormalization())
+    model.add(tf.keras.layers.Activation("relu"))
+    model.add(tf.keras.layers.Dropout(0.3))
+
+    # hidden layers
+    model.add(tf.keras.layers.Dense(6))
     model.add(tf.keras.layers.BatchNormalization())
     model.add(tf.keras.layers.Activation("relu"))
     model.add(tf.keras.layers.Dropout(0.3))
